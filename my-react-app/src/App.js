@@ -11,9 +11,10 @@ import Home from './pages/Home';
 
 const styles = theme => ({
   main: {
-    padding: 3 * theme.spacing.unit,
+    // padding: 3 * theme.spacing.unit,   //deprecated
+    padding: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
-      padding: 2 * theme.spacing.unit,
+      padding: theme.spacing(2),
     },
   },
 });
