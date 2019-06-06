@@ -38,7 +38,7 @@ const Post = database.define('posts',  {
     body: Sequelize.TEXT,
 });
 
-epilogue.initilize({app, Sequelize: database});
+epilogue.initialize({app, sequelize: database});
 
 epilogue.resource({
     model: Post,
