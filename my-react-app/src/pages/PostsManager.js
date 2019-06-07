@@ -55,13 +55,13 @@ class PostsManager extends Component {
                 headers: {
                     'content-type': 'application/json',
                     accept: 'application/json',
-                    authorization: `Bearer ${await this.PaymentResponse.auth.getAccessToken}`,
+                    authorization: `Bearer ${await this.props.auth.getAccessToken()}`,
                 },
             });
             return await response.json();
         } catch (error) {
             console.log(error);
-            
+                        
         }
     }
     
@@ -101,7 +101,7 @@ class PostsManager extends Component {
 
         return (
             <Fragment>
-                <Typography variant="display1">Posts Manager</Typography>
+                <Typography>Posts Manager</Typography>
                 {this.state.posts.length > 0 ? (
                     <Paper elevation={1} className={classes.posts}>
                         <List>
@@ -121,10 +121,10 @@ class PostsManager extends Component {
                         </List>
                     </Paper>
                 ) : (
-                    !this.state.loading && <Typography variant="subheading">No posts to display</Typography>
+                    !this.state.loading && <Typography variant="subtitle1">No posts to display</Typography>
                 )}
                 <Button
-                    variant="fab"
+                    // variant="fab"
                     color="secondary"
                     aria-label="add"
                     className={classes.fab}
