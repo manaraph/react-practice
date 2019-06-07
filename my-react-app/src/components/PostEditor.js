@@ -20,8 +20,12 @@ const styles = theme  => ({
         justifyContent: 'center',
     },
     modalCard: {
+        width: '90%',
+        maxWidth: 500,
+    },
+    modalCardContent: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
     marginTop: {
         marginTop: theme.spacing(2),
@@ -32,7 +36,7 @@ const PostEditor = ({ classes, post, onSave, history }) => (
     <Form initialValues={post} onSubmit={onSave}>
         {({ handleSubmit }) => (
             <Modal 
-                classsName={classes.modal}
+                className={classes.modal}
                 onClose={() => history.goBack()}
                 open
             >

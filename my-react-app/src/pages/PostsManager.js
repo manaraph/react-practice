@@ -51,12 +51,12 @@ class PostsManager extends Component {
         try {
             const response = await fetch(`${API}${endpoint}`, {
                 method,
-                body: body && JSON.stringify(body),
                 headers: {
                     'content-type': 'application/json',
                     accept: 'application/json',
                     authorization: `Bearer ${await this.props.auth.getAccessToken()}`,
                 },
+                body: body && JSON.stringify(body),
             });
             return await response.json();
         } catch (error) {
@@ -89,7 +89,7 @@ class PostsManager extends Component {
 
     renderPostEditor = ({ match:  { params: { id }}}) => {
         if (this.state.loading) return null;
-        const post = find(this.state.posts, { id: number(id) });
+        const post = find(this.state.posts, { id: Number(id) });
 
         if (!post && id !== 'new') return <Redirect to="/posts" />;
 
