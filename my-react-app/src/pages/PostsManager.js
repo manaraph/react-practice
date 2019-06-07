@@ -18,6 +18,7 @@ import { find, orderBy } from 'lodash';
 import { compose } from 'recompose';
 
 import PostEditor from '../components/PostEditor';
+import { number } from 'prop-types';
 
 const styles = theme => ({
     posts: {
@@ -36,7 +37,7 @@ const styles = theme => ({
 
 const API = process.env.REACT_APP_API || 'http://localhost:3001';
 
-class Postsmanager extends Component {
+class PostsManager extends Component {
     state = {
         loading: true,
         posts: [],
@@ -79,6 +80,65 @@ class Postsmanager extends Component {
         this.getPosts();
     }
 
-    async deletePost(post) {}
+    async deletePost(post) {
+        if (window.confirm(`Are you sure you want to delete "${post.title}"`)){
+            await this.fetch('delete', `/posts/${post.id}`);
+            this.getPosts();
+        }
+    }
+
+    renderPostEditor = ({ match:  { params: { id }}}) => {
+        if (this.state.loading) return null;
+        const post = find(this.state.posts, { id: number(id) });
+
+        if (!post && id !== 'new') return <Redirect to="/posts" />;
+
+        return <PostEditor post={post} onSave={this.savePost} />;
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <Fragment>
+                <Typography variant="display1">Posts Manager</Typography>
+                {this.state.posts.length > 0 ? (
+                    <Paper elevation={1} className={classes.posts}>
+                        <List>
+                            {orderBy(this.state.posts, ['updatedAt', 'title'], ['desc', 'asc']).map(post => (
+                                <ListItem key={post.id} button component={Link} to={`/posts/${post.id}`}>
+                                    <ListItemText
+                                    primary={post.title}
+                                    secondary={post.updatedAt && `updated ${moment(post.updatedAt).fromNow()}`}
+                                    />
+                                    <ListItemSecondaryAction>
+                                        <IconButton onClick={() => this.deletePost(post) } color="inherit">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Paper>
+                ) : (
+                    !this.state.loading && <Typography variant="subheading">No posts to display</Typography>
+                )}
+                <Button
+                    variant="fab"
+                    color="secondary"
+                    aria-label="add"
+                    className={classes.fab}
+                    component={Link}
+                    to="/posts/new"
+                >   
+                        <AddIcon />
+                </Button>
+                <Route exact path="/posts/:id" render={this.renderPostEditor} />
+            </Fragment>
+        );
+    }
 }
 
+export default compose(
+    withAuth, withRouter, withStyles(styles),
+)(PostsManager)
